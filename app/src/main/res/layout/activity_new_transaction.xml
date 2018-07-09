@@ -27,6 +27,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:theme="@style/TextInputLayoutTheme"
         app:layout_constraintEnd_toStartOf="@+id/new_transaction_btn_choose_from"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
@@ -39,16 +40,48 @@
 
     <Button
         android:id="@+id/new_transaction_btn_choose_from"
+        style="@style/BtnTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        style="@style/BtnTheme"
-        android:text="Choose"
+        android:text="@string/transaction_activity_btn_choose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/new_transaction_edittext_from"
         app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/new_transaction_edittext_to"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:theme="@style/TextInputLayoutTheme"
+        app:layout_constraintEnd_toStartOf="@+id/new_transaction_btn_choose_to"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_transaction_edittext_from">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/transaction_activity_to" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/new_transaction_btn_choose_to"
+        style="@style/BtnTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/transaction_activity_btn_choose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/new_transaction_edittext_to"
+        app:layout_constraintTop_toBottomOf="@+id/new_transaction_btn_choose_from" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -13,4 +13,12 @@
         <item name="android:background">@color/btn_color</item>
     </style>
 
+    <style name="TextInputLayoutTheme" parent="@android:style/TextAppearance">
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="android:textSize">20sp</item>
+
+        <item name="colorControlActivated">@color/text_input_layout_color</item>
+        <item name="colorControlHighlight">@color/text_input_layout_color</item>
+    </style>
+
 </resources>
