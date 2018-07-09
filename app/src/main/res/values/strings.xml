@@ -7,4 +7,8 @@
     <string name="transaction_activity_from">From</string>
     <string name="transaction_activity_btn_choose">Choose</string>
     <string name="transaction_activity_to">To</string>
+    <string name="transaction_activity_amount">Amount</string>
+    <string name="rupee_symbol">₹</string>
+    <string name="transaction_activity_radio_wallet">Wallet</string>
+    <string name="transaction_activity_radio_account">Account</string>
 </resources>
