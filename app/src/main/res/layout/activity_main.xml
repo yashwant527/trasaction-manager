@@ -18,7 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/app_name" />
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/background_light" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_1"
@@ -70,9 +71,9 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_from"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColor="@android:color/background_light" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -104,9 +105,9 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_to"
-                android:inputType="textCapWords" />
+                android:inputType="textCapWords"
+                android:textColor="@android:color/background_light" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -136,9 +137,9 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_amount"
-                android:inputType="number|numberDecimal" />
+                android:inputType="number|numberDecimal"
+                android:textColor="@android:color/background_light" />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -219,8 +220,8 @@
                 android:id="@+id/new_transaction_edittext_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_light"
-                android:hint="Description" />
+                android:hint="Description"
+                android:textColor="@android:color/background_light" />
         </android.support.design.widget.TextInputLayout>
 
 
