@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -13,11 +14,18 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:title="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/app_name" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/main_fab_add_transaction"
@@ -28,17 +36,24 @@
         android:background="@color/colorPrimary"
         android:clickable="true"
         android:focusable="true"
+        android:src="@drawable/baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/baseline_add_24" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout_2"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/layout_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
         android:visibility="gone"
-        android:background="@color/colorPrimary">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
+
+        <!-- Toolbar :: Title : New Transaction -->
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/new_transaction_edittext_from"
@@ -50,11 +65,12 @@
             android:theme="@style/TextInputLayoutTheme"
             app:layout_constraintEnd_toStartOf="@+id/new_transaction_btn_choose_from"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_from"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
@@ -70,7 +86,7 @@
             android:text="@string/transaction_activity_btn_choose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/new_transaction_edittext_from"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <android.support.design.widget.TextInputLayout
@@ -88,6 +104,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_to"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
@@ -119,6 +136,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/background_light"
                 android:hint="@string/transaction_activity_amount"
                 android:inputType="number|numberDecimal" />
         </android.support.design.widget.TextInputLayout>
@@ -144,8 +162,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_weight="1"
-            android:text="Need to be returned?"
             android:buttonTint="@android:color/background_light"
+            android:text="Need to be returned?"
             android:textColor="@android:color/background_light"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -168,8 +186,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/transaction_activity_radio_wallet"
                 android:buttonTint="@android:color/background_light"
+                android:text="@string/transaction_activity_radio_wallet"
                 android:textColor="@android:color/background_light"
                 android:textSize="20sp" />
 
@@ -177,8 +195,8 @@
                 android:id="@+id/new_transaction_radio_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@android:color/background_light"
                 android:layout_weight="1"
+                android:buttonTint="@android:color/background_light"
                 android:text="@string/transaction_activity_radio_account"
                 android:textColor="@android:color/background_light"
                 android:textSize="20sp" />
@@ -190,9 +208,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:theme="@style/TextInputLayoutTheme"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:theme="@style/TextInputLayoutTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/new_transaction_edittext_to">
@@ -201,6 +219,7 @@
                 android:id="@+id/new_transaction_edittext_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/background_light"
                 android:hint="Description" />
         </android.support.design.widget.TextInputLayout>
 
