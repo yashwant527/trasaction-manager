@@ -37,7 +37,7 @@ public class EntryListAdapter extends RecyclerView.Adapter<EntryListAdapter.Entr
             if (current.getTo().equals("Me")) {
                 holder.nameTextView.setText(current.getFrom());
                 holder.amountTextView.setText(String.format("+%s", String.valueOf(current.getAmount())));
-                holder.amountTextView.setTextColor(mContext.getResources().getColor(R.color.green));
+                holder.amountTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
             } else {
                 holder.nameTextView.setText(current.getTo());
                 holder.amountTextView.setText(String.format("-%s", String.valueOf(current.getAmount())));

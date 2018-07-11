@@ -11,4 +11,5 @@
     <string name="rupee_symbol">₹</string>
     <string name="transaction_activity_radio_wallet">Wallet</string>
     <string name="transaction_activity_radio_account">Account</string>
+    <string name="need_to_be_returned">Need to be returned?</string>
 </resources>
