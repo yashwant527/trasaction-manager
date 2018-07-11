@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "word_table")
+@Entity(tableName = "entry_table")
 public class Entry {
 
     @PrimaryKey(autoGenerate = true)
@@ -71,5 +71,9 @@ public class Entry {
 
     public boolean isNeed() {
         return mNeed;
+    }
+
+    public void setTid(int tid) {
+        this.mTid = tid;
     }
 }

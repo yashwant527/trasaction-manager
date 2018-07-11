@@ -1,25 +1,33 @@
 package com.example.parth.transactionmanager;
 
 import android.animation.Animator;
-import android.content.Intent;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.ColorStateList;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton mFab;
+    private FloatingActionButton mDoneFab;
     private ConstraintLayout mLayoutMain;
     private ConstraintLayout mLayoutAdd;
     private ConstraintLayout mLayoutContent;
     private boolean isOpen = false;
+    private boolean isDone = false;
     private Toolbar mToolbar;
+
+    private CheckBox test;
+
+    private EntryViewModel mEntryViewModel;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +35,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mFab = findViewById(R.id.main_fab_add_transaction);
+        mDoneFab = findViewById(R.id.main_fab_done_transaction);
         mToolbar = findViewById(R.id.main_toolbar);
         mLayoutMain = findViewById(R.id.layout_main);
         mLayoutAdd = findViewById(R.id.layout_2);
         mLayoutContent = findViewById(R.id.layout_1);
 
+        test = findViewById(R.id.checkBox);
+
+
         setSupportActionBar(mToolbar);
+
+        mEntryViewModel = ViewModelProviders.of(this).get(EntryViewModel.class);
 
 
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +55,21 @@ public class MainActivity extends AppCompatActivity {
                 viewMenu();
             }
         });
+
+        mDoneFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeFabIcon();
+            }
+        });
+
+        test.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                changeFabIcon();
+            }
+        });
+
     }
 
 
@@ -48,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (!isOpen) {
 
-            int x = mFab.getLeft() + (mFab.getRight()-mFab.getLeft())/2;
-            int y = mFab.getTop() + (mFab.getBottom()-mFab.getTop())/2-150;
+            int x = mFab.getLeft() + mFab.getWidth() / 2;
+            int y = mFab.getTop() - mFab.getHeight() / 2;
 
             int startRadius = 0;
-            int endRadius = (int) Math.hypot(mLayoutMain.getWidth(), mLayoutMain.getHeight());
+            int endRadius = Math.max(mLayoutContent.getWidth(), mLayoutContent.getHeight());
 
             mFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
             mFab.setImageResource(R.drawable.ic_close_grey);
@@ -65,9 +94,8 @@ public class MainActivity extends AppCompatActivity {
             isOpen = true;
 
         } else {
-
-            int x = mFab.getLeft() + (mFab.getRight()-mFab.getLeft())/2;
-            int y = mFab.getTop() + (mFab.getBottom()-mFab.getTop())/2 - 150;
+            int x = mFab.getLeft() + mFab.getWidth() / 2;
+            int y = mFab.getTop() - mFab.getHeight() / 2;
 
             int startRadius = Math.max(mLayoutContent.getWidth(), mLayoutContent.getHeight());
             int endRadius = 0;
@@ -100,6 +128,57 @@ public class MainActivity extends AppCompatActivity {
             anim.start();
 
             isOpen = false;
+        }
+    }
+
+    private void changeFabIcon() {
+
+        if (!isDone) {
+
+            int x = mDoneFab.getWidth() / 2;
+            int y = mDoneFab.getHeight() / 2;
+
+            int startRadius = 0;
+            int endRadius = mDoneFab.getWidth();
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(mDoneFab, x, y, startRadius, endRadius);
+
+            mDoneFab.setVisibility(View.VISIBLE);
+            anim.start();
+            isDone = true;
+
+        } else {
+            int x = mDoneFab.getWidth() / 2;
+            int y = mDoneFab.getHeight() / 2;
+
+            int startRadius = mDoneFab.getWidth();
+            int endRadius = 0;
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(mDoneFab, x, y, startRadius, endRadius);
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    mDoneFab.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            anim.start();
+
+            isDone = false;
         }
     }
 }
