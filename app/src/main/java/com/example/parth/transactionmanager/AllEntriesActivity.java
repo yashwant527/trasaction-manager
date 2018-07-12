@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 
 public class AllEntriesActivity extends AppCompatActivity {
 
     private EntryViewModel mEntryViewModel;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +26,16 @@ public class AllEntriesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        mToolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+
         mEntryViewModel = ViewModelProviders.of(this).get(EntryViewModel.class);
 
-        mEntryViewModel.getAllWords().observe(this, new Observer<List<Entry>>() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        adapter.setEntries(null);
+
+        mEntryViewModel.getAllEntries().observe(this, new Observer<List<Entry>>() {
             @Override
             public void onChanged(@Nullable List<Entry> entries) {
                 adapter.setEntries(entries);

@@ -32,15 +32,19 @@ public class Entry {
     @ColumnInfo(name = "need")
     private boolean mNeed;
 
+    @ColumnInfo(name = "date")
+    private long mDate;
+
 
     public Entry(@NonNull String from, @NonNull String to, String description,
-                 @NonNull double amount, @NonNull boolean wallet, @NonNull boolean need) {
+                 @NonNull double amount, @NonNull boolean wallet, @NonNull boolean need, @NonNull long date) {
         this.mFrom = from;
         this.mTo = to;
         this.mDescription = description;
         this.mAmount = amount;
         this.mWallet = wallet;
         this.mNeed = need;
+        this.mDate = date;
     }
 
     public int getTid() {
@@ -71,6 +75,10 @@ public class Entry {
 
     public boolean isNeed() {
         return mNeed;
+    }
+
+    public long getDate() {
+        return mDate;
     }
 
     public void setTid(int tid) {

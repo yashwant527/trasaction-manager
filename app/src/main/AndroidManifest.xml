@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AllEntriesActivity"></activity>
+        <activity
+            android:name=".AllEntriesActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -1,24 +1,45 @@
 package com.example.parth.transactionmanager;
 
 import android.animation.Animator;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String mypreference = "mypref";
+    public static final String Account = "accountKey";
+    public static final String Wallet = "WalletKey";
+    public static final String TID = "TidKey";
+
     private FloatingActionButton mFab;
+    SharedPreferences sharedpreferences;
     private FloatingActionButton mDoneFab;
     private ConstraintLayout mLayoutMain;
     private ConstraintLayout mLayoutAdd;
@@ -26,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isOpen = false;
     private boolean isDone = false;
-    private TextView mViewAllView;
 
     private TextInputAutoCompleteTextView mTvFrom;
     private TextInputAutoCompleteTextView mTvTo;
@@ -38,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
     private int mCheckedId = -1;
 
     private EntryViewModel mEntryViewModel;
+    private TextView mWalletTv;
+    private TextView mAccountTv;
+    private CardView mWalletCardView;
+    private CardView mAccountCardView;
+    private TextView mViewAllView;
+    private List<User> mUsers;
+    private Toast mToast;
 
     @Override
 
@@ -58,7 +85,29 @@ public class MainActivity extends AppCompatActivity {
         mSource = findViewById(R.id.radioGroup);
         mNeed = findViewById(R.id.checkBox);
 
+        mWalletTv = findViewById(R.id.wallet_tv);
+        mAccountTv = findViewById(R.id.account_tv);
+
         mViewAllView = findViewById(R.id.tv_view_all);
+
+        mWalletCardView = findViewById(R.id.cardView_wallet);
+        mAccountCardView = findViewById(R.id.cardView_Account);
+
+        sharedpreferences = getSharedPreferences(mypreference,
+                MODE_PRIVATE);
+
+        mWalletCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewDialog(0);
+            }
+        });
+        mAccountCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewDialog(1);
+            }
+        });
 
         mViewAllView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 viewMenu();
+                mNeed.setChecked(true);
             }
         });
 
@@ -156,15 +206,63 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean src = source == R.id.new_transaction_radio_wallet;
 
-                Entry entry = new Entry(from, to, desc, Double.valueOf(amount), src, need);
+                Date date = Calendar.getInstance().getTime();
+                long convertedDate = DateConverter.dateToTimestamp(date);
+
+                Entry entry = new Entry(from, to, desc, Double.valueOf(amount), src, need, convertedDate);
 
                 mEntryViewModel.insert(entry);
 
-                Intent intent = new Intent(MainActivity.this, AllEntriesActivity.class);
-                startActivity(intent);
+                int tid = sharedpreferences.getInt(TID, 0);
+
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putInt(TID, tid + 1);
+                editor.apply();
+
+                if (from.equals("Me")) {
+                    if (need)
+                        updateUsers(to, Double.valueOf(amount), String.valueOf(tid));
+                    if (src)
+                        updateBalance(0, -1 * Double.valueOf(amount));
+                    else
+                        updateBalance(1, -1 * Double.valueOf(amount));
+                } else {
+                    if (need)
+                        updateUsers(from, -1 * Double.valueOf(amount), String.valueOf(tid));
+                    if (src)
+                        updateBalance(0, Double.valueOf(amount));
+                    else
+                        updateBalance(1, Double.valueOf(amount));
+                }
+                showToast("Added Transaction Successfully!");
             }
         });
 
+
+        RecyclerView recyclerView = findViewById(R.id.pending_recycler_view);
+        final UserListAdapter adapter = new UserListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mEntryViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(@Nullable List<User> entries) {
+                adapter.setEntries(entries);
+                mUsers = entries;
+            }
+        });
+
+        if (sharedpreferences.contains(Wallet)) {
+            mWalletTv.setText(String.format("%s%s", getText(R.string.rupee_symbol), sharedpreferences.getString(Wallet, "NA")));
+        }
+        if (sharedpreferences.contains(Account)) {
+            mAccountTv.setText(String.format("%s%s", getText(R.string.rupee_symbol), sharedpreferences.getString(Account, "NA")));
+        }
+        if (!sharedpreferences.contains(TID)) {
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putInt(TID, 0);
+            editor.apply();
+        }
 
     }
 
@@ -294,5 +392,101 @@ public class MainActivity extends AppCompatActivity {
             if (!isDone)
                 changeFabIcon();
         } else if (isDone) changeFabIcon();
+    }
+
+    private void updateUsers(String name, double amount, String tid) {
+        User user = null;
+        if (mUsers != null) {
+            for (User current : mUsers) {
+                if (current.getName().equals(name)) {
+                    user = current;
+                    break;
+                }
+
+            }
+
+            if (user == null) {
+                user = new User(name, amount, tid, tid);
+                mEntryViewModel.insertUser(user);
+            } else {
+                user.setmDue(user.getDue() + amount);
+                user.setmAllTransactions(user.getAllTransactions() + ", " + tid);
+                if (user.getDue() == 0) {
+                    user.setmPendingTransactions("");
+                } else {
+                    if (user.getPendingTransactions().equals("")) user.setmPendingTransactions(tid);
+                    else user.setmPendingTransactions(user.getPendingTransactions() + ", " + tid);
+                }
+                mEntryViewModel.insertUser(user);
+            }
+
+
+        }
+
+    }
+
+    private void viewDialog(final int val) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.edit_text_dialog_layout, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(this);
+        alertDialogBuilderUserInput.setView(mView);
+
+        final EditText userInputDialogEditText = mView.findViewById(R.id.userInputDialog);
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogBox, int id) {
+                        String text = userInputDialogEditText.getText().toString();
+                        if (!text.isEmpty())
+                            if (val == 0) {
+                                mWalletTv.setText(text);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(Wallet, text);
+                                editor.apply();
+                            } else {
+                                mAccountTv.setText(text);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(Account, text);
+                                editor.apply();
+                            }
+                    }
+                })
+
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                dialogBox.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.show();
+    }
+
+    private void showToast(String s) {
+        if (mToast == null) {
+            mToast = new Toast(this);
+            Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        } else {
+            mToast.setText(s);
+            mToast.show();
+        }
+    }
+
+    private void updateBalance(int source, double amount) {
+        if (source == 0) {
+            double amt = Double.valueOf(mWalletTv.getText().toString().substring(1)) + amount;
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Wallet, String.valueOf(amt));
+            editor.apply();
+            mWalletTv.setText(String.format("%s %s", getText(R.string.rupee_symbol), String.valueOf(amt)));
+        } else {
+            double amt = Double.valueOf(mAccountTv.getText().toString().substring(1)) + amount;
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Account, String.valueOf(amt));
+            editor.apply();
+            mAccountTv.setText(String.format("%s %s", getText(R.string.rupee_symbol), String.valueOf(amt)));
+
+        }
     }
 }

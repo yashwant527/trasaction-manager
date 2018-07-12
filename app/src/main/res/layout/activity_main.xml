@@ -43,15 +43,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView_wallet" />
 
-        <android.support.v7.widget.RecyclerView
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pending_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp" />
+
+        </ScrollView>
+
 
         <TextView
             android:id="@+id/tv_view_all"
@@ -95,7 +102,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/rupee_symbol"
+                    android:id="@+id/wallet_tv"
+                    android:text="NA"
                     android:textColor="@color/purple"
                     android:textSize="24sp" />
             </LinearLayout>
@@ -130,8 +138,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/account_tv"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/rupee_symbol"
+                    android:text="NA"
                     android:textColor="@color/purple"
                     android:textSize="24sp" />
 
@@ -174,7 +183,7 @@
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
         android:focusableInTouchMode="true"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

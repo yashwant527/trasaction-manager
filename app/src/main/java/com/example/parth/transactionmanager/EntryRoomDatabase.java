@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Entry.class}, version = 1)
+@Database(entities = {Entry.class, User.class}, version = 1)
 public abstract class EntryRoomDatabase extends RoomDatabase {
 
     private static EntryRoomDatabase INSTANCE;
@@ -25,4 +25,6 @@ public abstract class EntryRoomDatabase extends RoomDatabase {
     }
 
     public abstract EntryDao entryDao();
+
+    public abstract UserDao userDao();
 }

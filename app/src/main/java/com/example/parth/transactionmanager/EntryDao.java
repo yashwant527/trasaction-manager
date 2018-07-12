@@ -17,4 +17,5 @@ public interface EntryDao {
 
     @Query("DELETE FROM entry_table")
     void deleteAll();
+
 }
